@@ -1,0 +1,235 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  accounts      Account[]
+  sessions      Session[]
+  stores        Store[]
+  subscriptions Subscription[]
+  teamMembers   TeamMember[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Store {
+  id          String   @id @default(cuid())
+  name        String
+  url         String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  products    Product[]
+  orders      Order[]
+  customers   Customer[]
+  integrations Integration[]
+  analytics   Analytics[]
+  automations Automation[]
+  campaigns   Campaign[]
+  teamMembers TeamMember[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  role      String // e.g., OWNER, MANAGER, VIEWER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, userId])
+}
+
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String
+  type        String // e.g., EMAIL, AD, SOCIAL
+  status      String // e.g., DRAFT, ACTIVE, COMPLETED
+  budget      Float?
+  config      Json?
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  images      String[]
+  category    String?
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  variants    Json?
+  aiScore     Float?
+  isViral     Boolean  @default(false)
+  orders      OrderProduct[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  orderNumber String   @unique
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  status      OrderStatus @default(PENDING)
+  total       Float
+  products    OrderProduct[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model OrderProduct {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String
+  name      String?
+  phone     String?
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Integration {
+  id          String   @id @default(cuid())
+  type        String // e.g., SHOPIFY, WOOCOMMERCE, PAYPAL
+  config      Json
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  plan      Plan     @default(FREE)
+  status    String // active, past_due, canceled
+  stripeId  String?  @unique
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Plan {
+  FREE
+  STARTER
+  PRO
+  SCALE
+  ENTERPRISE
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  date      DateTime
+  metric    String
+  value     Float
+  createdAt DateTime @default(now())
+}
+
+model Automation {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  config    Json
+  enabled   Boolean  @default(true)
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MarketplaceItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  type        MarketplaceType
+  sellerId    String // Could be a User ID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum MarketplaceType {
+  THEME
+  APP
+  SUPPLIER
+  PRODUCT
+}
