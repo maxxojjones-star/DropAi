@@ -67,7 +67,7 @@
 /* ===== Base Styles ===== */
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border-color);
   }
 
   body {

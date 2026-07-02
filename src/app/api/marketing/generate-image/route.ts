@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { generateImage } from '@/services/ai/imageGeneration';
+import { generateMarketingImage, createProductImage } from '@/services/ai/imageGeneration';
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'prompt is required' }, { status: 400 });
     }
 
-    const imageResult = await generateImage(prompt, { style, size });
+    const imageResult = await generateMarketingImage(prompt, style || 'product');
 
     return NextResponse.json(imageResult);
   } catch (error) {

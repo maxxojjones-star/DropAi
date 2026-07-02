@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { generateMarketingCopy } from '@/services/ai/copywriting';
+import { generateAdCopy, generateProductCopy } from '@/services/ai/copywriting';
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'content is required' }, { status: 400 });
     }
 
-    const copy = await generateMarketingCopy(content, { type, tone });
+    const copy = await generateAdCopy(content, tone || 'professional', type || 'general');
 
     return NextResponse.json(copy);
   } catch (error) {

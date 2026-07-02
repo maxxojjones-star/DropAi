@@ -7,7 +7,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Github, Chrome } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Globe, Code } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -134,7 +134,7 @@ export default function LoginPage() {
             size="md"
             isFullWidth
             onClick={() => handleOAuth("google")}
-            leftIcon={<Chrome className="w-4 h-4" />}
+            leftIcon={<Globe className="w-4 h-4" />}
           >
             Google
           </Button>
@@ -144,7 +144,7 @@ export default function LoginPage() {
             size="md"
             isFullWidth
             onClick={() => handleOAuth("github")}
-            leftIcon={<Github className="w-4 h-4" />}
+            leftIcon={<Code className="w-4 h-4" />}
           >
             GitHub
           </Button>

@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import {
   Sparkles, Image as ImageIcon, FileText, BarChart3,
   Play, Copy, Check, RefreshCw, Download, Send,
-  Facebook, Instagram, Globe, Youtube, ChevronDown,
+  Globe, Camera, ChevronDown,
   DollarSign, Eye, MousePointerClick, TrendingUp,
   ShoppingCart, Share2, Settings, AlertCircle,
   Palette, Type, Target,
@@ -28,10 +28,10 @@ const MARKETING_TABS = [
 
 const PLATFORMS = [
   { id: "tiktok", label: "TikTok", icon: Play },
-  { id: "facebook", label: "Facebook", icon: Facebook },
-  { id: "instagram", label: "Instagram", icon: Instagram },
+  { id: "facebook", label: "Facebook", icon: Globe },
+  { id: "instagram", label: "Instagram", icon: Camera },
   { id: "google", label: "Google", icon: Globe },
-  { id: "youtube", label: "YouTube", icon: Youtube },
+  { id: "youtube", label: "YouTube", icon: Play },
 ];
 
 const AD_FORMATS = ["Image", "Video", "Carousel", "Story"];

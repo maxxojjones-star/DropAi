@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/Select";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, User, Lock, ArrowRight, Eye, EyeOff, Github, Chrome } from "lucide-react";
+import { Mail, User, Lock, ArrowRight, Eye, EyeOff, Globe, Code } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -164,10 +164,10 @@ export default function SignupPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Button type="button" variant="glass" size="md" isFullWidth leftIcon={<Chrome className="w-4 h-4" />}>
+          <Button type="button" variant="glass" size="md" isFullWidth leftIcon={<Globe className="w-4 h-4" />}>
             Google
           </Button>
-          <Button type="button" variant="glass" size="md" isFullWidth leftIcon={<Github className="w-4 h-4" />}>
+          <Button type="button" variant="glass" size="md" isFullWidth leftIcon={<Code className="w-4 h-4" />}>
             GitHub
           </Button>
         </div>
