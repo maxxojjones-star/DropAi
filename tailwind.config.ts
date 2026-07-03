@@ -11,6 +11,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // CSS variable-based colors for dynamic theming
+        'surface-bg': 'var(--surface-bg)',
+        'surface-elevated': 'var(--surface-elevated)',
+        'text-primary': 'var(--text-primary)',
+        'text-secondary': 'var(--text-secondary)',
+        'text-muted': 'var(--text-muted)',
+        'border': 'var(--border-color)',
         // Deep purple / cyan palette for premium SaaS feel
         brand: {
           50: "#f3f0ff",
