@@ -233,3 +233,106 @@ enum MarketplaceType {
   SUPPLIER
   PRODUCT
 }
+
+// ============================================================
+// Data Pipeline — Spy Tools Data Tables
+// Powers Product Library, Ad Spy, Competitor Spy, Sales Tracker
+// ============================================================
+
+model TrackedProduct {
+  id             String   @id @default(cuid())
+  title          String
+  description    String?
+  price          Float
+  costPrice      Float?
+  sourceUrl      String?
+  sourcePlatform String   @default("unknown")
+  images         String[]
+  category       String?
+  tags           String[]
+  aiScore        Float?
+  trendScore     Float?
+  profitMargin   Float?
+  supplierName   String?
+  engagementData Json?
+  storeId        String?
+  store          Store?    @relation(fields: [storeId], references: [id])
+  pipelineJobId  String?
+  pipelineJob    PipelineJob? @relation(fields: [pipelineJobId], references: [id])
+  trackedAt      DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model ScrapedAd {
+  id              String   @id @default(cuid())
+  brandName       String
+  headline        String
+  description     String?
+  platform        String
+  adType          String   @default("video")
+  thumbnailUrl    String?
+  landingUrl      String?
+  engagement      Json?
+  ctaUsed         String?
+  productCategory String?
+  estimatedReach  Int?
+  scrapedAt       DateTime @default(now())
+  pipelineJobId   String?
+  pipelineJob     PipelineJob? @relation(fields: [pipelineJobId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CompetitorStore {
+  id               String   @id @default(cuid())
+  name             String
+  url              String   @unique
+  platform         String   @default("shopify")
+  productCount     Int      @default(0)
+  estimatedRevenue Float?
+  monthlyVisitors  Int?
+  topProducts      Json?
+  techStack        Json?
+  adCount          Int      @default(0)
+  lastScannedAt    DateTime?
+  pipelineJobId    String?
+  pipelineJob      PipelineJob? @relation(fields: [pipelineJobId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model TrendingItem {
+  id             String   @id @default(cuid())
+  keyword        String
+  platform       String   @default("google")
+  searchVolume   Int?
+  growthRate     Float?
+  trendDirection String   @default("rising")
+  relatedQueries String[]
+  category       String?
+  seasonality    Json?
+  sourceData     Json?
+  pipelineJobId  String?
+  pipelineJob    PipelineJob? @relation(fields: [pipelineJobId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model PipelineJob {
+  id               String   @id @default(cuid())
+  jobType          String
+  status           String   @default("pending")
+  source           String   @default("manual")
+  resultsCount     Int      @default(0)
+  errorMessage     String?
+  durationMs       Int?
+  metadata         Json?
+  trackedProducts  TrackedProduct[]
+  scrapedAds       ScrapedAd[]
+  competitorStores CompetitorStore[]
+  trendingItems    TrendingItem[]
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime @default(now())
+}
