@@ -20,6 +20,9 @@ import {
   Search,
   Bell,
   HelpCircle,
+  LineChart,
+  Crosshair,
+  Target,
 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
@@ -42,6 +45,14 @@ const navigation = [
       { label: "Orders", icon: ShoppingBag, href: "/orders" },
       { label: "Marketing Center", icon: Megaphone, href: "/marketing" },
       { label: "Analytics", icon: BarChart3, href: "/analytics" },
+    ],
+  },
+  {
+    section: "Spy Tools",
+    items: [
+      { label: "Research Hub", icon: Target, href: "/research-hub" },
+      { label: "Sales Tracker", icon: LineChart, href: "/sales-tracker" },
+      { label: "Competitor Spy", icon: Crosshair, href: "/competitor-spy" },
     ],
   },
   {
